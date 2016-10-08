@@ -396,7 +396,7 @@ pp.parseExprAtom = function (refShorthandDefaultPos) {
 
     case tt._import: // NOTE: This is only valid with `importFunctions` plugin
     case tt.name:
-      if (!this.hasPlugin('importFunctions') && this.state.type === tt._import) this.unexpected();
+      if (!this.hasPlugin("importFunctions") && this.state.type === tt._import) this.unexpected();
       node = this.startNode();
       let allowAwait = this.state.value === "await" && this.state.inAsync;
       let allowYield = this.shouldAllowYieldIdentifier();
