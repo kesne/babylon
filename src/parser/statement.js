@@ -98,6 +98,18 @@ pp.parseStatement = function (declaration, topLevel) {
     case tt.semi: return this.parseEmptyStatement(node);
     case tt._export:
     case tt._import:
+      if (this.hasPlugin("importFunctions")) {
+        // peek ahead and see if next token is a starting paren
+        let state = this.state.clone();
+        this.next();
+        if (this.match(tt.parenL)) {
+          this.state = state;
+          break;
+        } else {
+          this.state = state;
+        }
+      }
+
       if (!this.options.allowImportExportEverywhere) {
         if (!topLevel) {
           this.raise(this.state.start, "'import' and 'export' may only appear at the top level");
