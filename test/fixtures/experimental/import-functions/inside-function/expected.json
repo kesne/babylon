@@ -111,7 +111,7 @@
                 }
               },
               "argument": {
-                "type": "ImportCallExpression",
+                "type": "CallExpression",
                 "start": 37,
                 "end": 62,
                 "loc": {
@@ -125,7 +125,7 @@
                   }
                 },
                 "callee": {
-                  "type": "Identifier",
+                  "type": "Import",
                   "start": 37,
                   "end": 43,
                   "loc": {
@@ -136,10 +136,8 @@
                     "end": {
                       "line": 2,
                       "column": 15
-                    },
-                    "identifierName": "import"
-                  },
-                  "name": "import"
+                    }
+                  }
                 },
                 "arguments": [
                   {

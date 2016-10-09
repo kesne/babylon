@@ -300,8 +300,7 @@ pp.parseSubscripts = function (base, startPos, startLoc, noCalls) {
       let node = this.startNodeAt(startPos, startLoc);
       node.callee = base;
       node.arguments = this.parseCallExpressionArguments(tt.parenR, possibleAsync);
-      base = this.finishNode(node, this.state.inImportCall ? "ImportCallExpression" : "CallExpression");
-      this.state.inImportCall = false;
+      base = this.finishNode(node, "CallExpression");
 
       if (possibleAsync && this.shouldParseAsyncArrow()) {
         return this.parseAsyncArrowFromCallExpression(this.startNodeAt(startPos, startLoc), node);
@@ -386,6 +385,16 @@ pp.parseExprAtom = function (refShorthandDefaultPos) {
       }
       return this.finishNode(node, "Super");
 
+    case tt._import:
+      if (!this.hasPlugin("importFunctions")) this.unexpected();
+
+      node = this.startNode();
+      this.next();
+      if (!this.match(tt.parenL)) {
+        this.unexpected();
+      }
+      return this.finishNode(node, "Import");
+
     case tt._this:
       node = this.startNode();
       this.next();
@@ -394,7 +403,6 @@ pp.parseExprAtom = function (refShorthandDefaultPos) {
     case tt._yield:
       if (this.state.inGenerator) this.unexpected();
 
-    case tt._import: // NOTE: This is only valid with `importFunctions` plugin
     case tt.name:
       if (!this.hasPlugin("importFunctions") && this.state.type === tt._import) this.unexpected();
       node = this.startNode();
@@ -402,9 +410,6 @@ pp.parseExprAtom = function (refShorthandDefaultPos) {
       let allowYield = this.shouldAllowYieldIdentifier();
       let id = this.parseIdentifier(allowAwait || allowYield);
 
-      if (id.name === "import") {
-        this.state.inImportCall = true;
-      }
       if (id.name === "await") {
         if (this.state.inAsync || this.inModule) {
           return this.parseAwait(node);
@@ -991,9 +996,7 @@ pp.parseExprListItem = function (allowEmpty, refShorthandDefaultPos) {
 pp.parseIdentifier = function (liberal) {
   let node = this.startNode();
 
-  if (this.match(tt._import) && this.hasPlugin("importFunctions") && this.state.value === "import") {
-    node.name = "import";
-  } else if (this.match(tt.name)) {
+  if (this.match(tt.name)) {
     if (!liberal && this.state.strict && reservedWords.strict(this.state.value)) {
       this.raise(this.state.start, "The keyword '" + this.state.value + "' is reserved");
     }
