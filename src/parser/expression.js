@@ -300,6 +300,9 @@ pp.parseSubscripts = function (base, startPos, startLoc, noCalls) {
       let node = this.startNodeAt(startPos, startLoc);
       node.callee = base;
       node.arguments = this.parseCallExpressionArguments(tt.parenR, possibleAsync);
+      if (node.callee.type === "Import" && node.arguments.length > 1) {
+        this.raise(node.start, "import() only accepts one argument");
+      }
       base = this.finishNode(node, "CallExpression");
 
       if (possibleAsync && this.shouldParseAsyncArrow()) {
