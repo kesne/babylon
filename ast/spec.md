@@ -567,6 +567,8 @@ interface Super <: Node {
 }
 ```
 
+A `super` pseudo-expression.
+
 ## Import
 
 ```js
