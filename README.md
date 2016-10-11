@@ -117,4 +117,4 @@ require("babylon").parse("code", {
  - `asyncGenerators`
  - `functionBind`
  - `functionSent`
- - `importFunctions`
+ - `dynamicImport`

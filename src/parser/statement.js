@@ -98,7 +98,7 @@ pp.parseStatement = function (declaration, topLevel) {
     case tt.semi: return this.parseEmptyStatement(node);
     case tt._export:
     case tt._import:
-      if (this.hasPlugin("importFunctions") && this.lookahead().type === tt.parenL) break;
+      if (this.hasPlugin("dynamicImport") && this.lookahead().type === tt.parenL) break;
 
       if (!this.options.allowImportExportEverywhere) {
         if (!topLevel) {
